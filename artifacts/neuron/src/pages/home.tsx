@@ -1,196 +1,207 @@
-import { useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
-import { Play, Mail, Share2, ArrowRight } from "lucide-react";
+import { useRef, useState, useEffect } from "react";
+import { motion } from "framer-motion";
+import { Play, Mail, Share2, Check } from "lucide-react";
 import { SiSpotify, SiTiktok, SiYoutube, SiInstagram, SiApplemusic } from "react-icons/si";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
 import logoImg from "@assets/image_1781383605153.png";
 
+const SOCIALS = [
+  { Icon: SiSpotify,    href: "https://open.spotify.com/artist/neuron", label: "Spotify",     glow: "#1DB954" },
+  { Icon: SiTiktok,     href: "https://tiktok.com/@neuron",             label: "TikTok",      glow: "#69C9D0" },
+  { Icon: SiYoutube,    href: "https://youtube.com/@neuron",            label: "YouTube",     glow: "#FF0000" },
+  { Icon: SiInstagram,  href: "https://instagram.com/neuron",           label: "Instagram",   glow: "#E1306C" },
+  { Icon: SiApplemusic, href: "https://music.apple.com",               label: "Apple Music", glow: "#FC3C44" },
+];
+
 export default function Home() {
-  const { toast } = useToast();
   const contactRef = useRef<HTMLDivElement>(null);
-  
-  const { scrollYProgress } = useScroll();
-  const yBg = useTransform(scrollYProgress, [0, 1], ["0%", "50%"]);
-  const opacityBg = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 0.4, 0.1]);
+  const [copied, setCopied] = useState(false);
+  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
 
-  const scrollToContact = () => {
-    contactRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      setMousePos({
+        x: (e.clientX / window.innerWidth) * 100,
+        y: (e.clientY / window.innerHeight) * 100,
+      });
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
 
-  const shareProfile = () => {
-    navigator.clipboard.writeText(window.location.href);
-    toast({
-      title: "Link kopyalandı",
-      description: "Profil linki uğurla kopyalandı.",
-    });
-  };
-
-  const staggerContainer = {
-    hidden: { opacity: 0 },
-    show: {
-      opacity: 1,
-      transition: { staggerChildren: 0.1 }
-    }
-  };
-
-  const fadeUp = {
-    hidden: { opacity: 0, y: 30 },
-    show: { 
-      opacity: 1, 
-      y: 0,
-      transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
-    }
+  const handleShare = async () => {
+    await navigator.clipboard.writeText(window.location.href);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div className="min-h-screen bg-black text-white overflow-hidden relative selection:bg-primary/30">
-      {/* Cinematic Background */}
-      <div className="fixed inset-0 pointer-events-none z-0">
-        <motion.div 
-          className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-primary/15 via-black/90 to-black"
-          style={{ y: yBg, opacity: opacityBg }}
-        />
-        {/* Subtle noise texture */}
-        <div className="absolute inset-0 opacity-[0.03]" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22/%3E%3C/svg%3E")' }}></div>
-      </div>
+    <div className="relative min-h-screen bg-[#030a04] text-white overflow-x-hidden">
 
-      <main className="relative z-10 max-w-4xl mx-auto px-6 py-24 flex flex-col items-center justify-center min-h-[100dvh]">
-        
-        {/* Hero Section */}
-        <motion.section 
-          className="w-full flex flex-col items-center text-center mb-32"
-          variants={staggerContainer}
-          initial="hidden"
-          animate="show"
+      {/* — animated radial bg that follows cursor — */}
+      <div
+        className="pointer-events-none fixed inset-0 z-0 transition-all duration-700"
+        style={{
+          background: `radial-gradient(ellipse 70% 60% at ${mousePos.x}% ${mousePos.y}%, rgba(34,197,94,0.07) 0%, transparent 70%)`,
+        }}
+      />
+      {/* static deep green center glow */}
+      <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(34,197,94,0.12),transparent)]" />
+
+      {/* ─── HERO ─── */}
+      <section className="relative z-10 flex flex-col items-center text-center px-6 pt-24 pb-16 max-w-3xl mx-auto">
+
+        {/* logo */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.85 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="relative mb-7"
         >
-          <motion.div variants={fadeUp} className="relative mb-8 group">
-            <div className="absolute -inset-1 bg-primary/30 rounded-2xl blur-xl group-hover:bg-primary/50 transition-all duration-700 opacity-50 group-hover:opacity-100"></div>
-            <img 
-              src={logoImg} 
-              alt="Neuron Logo" 
-              className="w-40 h-40 object-cover rounded-2xl relative z-10 border border-white/10 shadow-2xl transition-transform duration-500 group-hover:scale-105"
-            />
-          </motion.div>
+          <div className="absolute inset-0 rounded-2xl bg-green-500/20 blur-2xl scale-110" />
+          <img
+            src={logoImg}
+            alt="Neuron"
+            className="relative w-36 h-36 rounded-2xl object-cover border border-white/10 shadow-[0_0_40px_rgba(34,197,94,0.25)]"
+          />
+        </motion.div>
 
-          <motion.div variants={fadeUp} className="mb-4">
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-primary/10 text-primary border border-primary/20 backdrop-blur-md">
-              Rapper / Bəstəkar
-            </span>
-          </motion.div>
+        {/* badge */}
+        <motion.span
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.2, duration: 0.5 }}
+          className="mb-5 inline-block rounded-full border border-green-500/30 bg-green-500/10 px-4 py-1 text-xs font-semibold tracking-widest text-green-400 uppercase"
+        >
+          Rapper / Bəstəkar
+        </motion.span>
 
-          <motion.h1 
-            variants={fadeUp}
-            className="text-6xl md:text-8xl font-black font-display tracking-tighter mb-8 bg-clip-text text-transparent bg-gradient-to-b from-white to-white/50 filter drop-shadow-sm"
+        {/* name */}
+        <motion.h1
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.3, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-7 font-display text-[clamp(4rem,15vw,9rem)] font-black leading-none tracking-tighter"
+          style={{
+            background: "linear-gradient(170deg, #ffffff 30%, rgba(255,255,255,0.4) 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}
+        >
+          Neuron
+        </motion.h1>
+
+        {/* bio */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.45, duration: 0.6 }}
+          className="mb-10 max-w-xl space-y-3 text-[15px] leading-relaxed text-zinc-400"
+        >
+          <p>Salam mən neuron. Bu camiyada yeniyem fərqimi ortaya qoyacam. Şans versəniz sevinərəm.</p>
+          <p>Mənə aşağıdakı linklərə keçid edərək və sosial media hesablarımdan məni izləyərək dəstək ola bilərsiniz.</p>
+        </motion.div>
+
+        {/* CTA buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 14 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.55, duration: 0.6 }}
+          className="flex flex-wrap justify-center gap-3"
+        >
+          <a
+            href="https://open.spotify.com/artist/neuron"
+            target="_blank"
+            rel="noopener noreferrer"
+            data-testid="button-listen"
+            className="inline-flex items-center gap-2 rounded-full bg-green-500 px-7 py-3.5 text-sm font-bold text-black transition-all duration-200 hover:bg-green-400 hover:shadow-[0_0_28px_rgba(34,197,94,0.55)] active:scale-95"
           >
-            NEURON
-          </motion.h1>
+            <Play className="h-4 w-4 fill-black" />
+            Musiqi Dinlə
+          </a>
+          <button
+            onClick={() => contactRef.current?.scrollIntoView({ behavior: "smooth" })}
+            data-testid="button-contact"
+            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/10 hover:border-white/30 active:scale-95"
+          >
+            Əlaqə
+          </button>
+        </motion.div>
+      </section>
 
-          <motion.div variants={fadeUp} className="max-w-2xl mx-auto space-y-6 text-lg md:text-xl text-zinc-400 font-light leading-relaxed">
-            <p>
-              Salam mən neuron. Bu camiyada yeniyem fərqimi ortaya qoyacam. Şans versəniz sevinərəm.
-            </p>
-            <p>
-              Mənə aşağıdakı linklərə keçid edərək və sosial media hesablarımdan məni izləyərək dəstək ola bilərsiniz.
-            </p>
-          </motion.div>
+      {/* ─── SOCIAL ICONS ─── */}
+      <section className="relative z-10 flex justify-center gap-4 px-6 py-8">
+        {SOCIALS.map(({ Icon, href, label, glow }, i) => (
+          <motion.a
+            key={label}
+            href={href}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-testid={`link-${label.toLowerCase().replace(" ", "-")}`}
+            title={label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.65 + i * 0.08, duration: 0.5 }}
+            whileHover={{ scale: 1.15, boxShadow: `0 0 24px ${glow}99` }}
+            whileTap={{ scale: 0.95 }}
+            className="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-400 transition-colors duration-200"
+            style={{ "--glow": glow } as React.CSSProperties}
+          >
+            <Icon className="h-6 w-6" />
+          </motion.a>
+        ))}
+      </section>
 
-          <motion.div variants={fadeUp} className="mt-12 flex flex-col sm:flex-row gap-4 items-center w-full sm:w-auto">
-            <Button 
-              size="lg" 
-              className="w-full sm:w-auto text-base h-14 px-8 rounded-full bg-primary hover:bg-primary/90 text-black font-bold group shadow-[0_0_30px_-5px_rgba(34,197,94,0.4)] hover:shadow-[0_0_40px_0px_rgba(34,197,94,0.6)] transition-all"
-              onClick={() => window.open('https://open.spotify.com/artist/neuron', '_blank')}
-              data-testid="button-listen"
-            >
-              <Play className="mr-2 h-5 w-5 fill-black" />
-              Musiqi Dinlə
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline"
-              className="w-full sm:w-auto text-base h-14 px-8 rounded-full border-white/10 hover:bg-white/5 hover:text-white backdrop-blur-sm transition-all group"
-              onClick={scrollToContact}
-              data-testid="button-contact-scroll"
-            >
-              Əlaqə
-              <ArrowRight className="ml-2 h-4 w-4 opacity-50 group-hover:translate-x-1 group-hover:opacity-100 transition-all" />
-            </Button>
-          </motion.div>
-        </motion.section>
+      {/* ─── DIVIDER ─── */}
+      <div className="mx-auto my-16 max-w-xs h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-        {/* Social Links Section */}
-        <motion.section 
-          className="w-full max-w-xl mx-auto mb-32"
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={staggerContainer}
+      {/* ─── CONTACT ─── */}
+      <section
+        ref={contactRef}
+        className="relative z-10 flex flex-col items-center px-6 pb-28 text-center max-w-md mx-auto"
+      >
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mb-8 font-display text-3xl font-bold md:text-4xl"
         >
-          <div className="flex justify-center flex-wrap gap-4 md:gap-6">
-            {[
-              { icon: SiSpotify, link: "https://open.spotify.com/artist/neuron", color: "hover:bg-[#1DB954] hover:shadow-[#1DB954]/50", name: "Spotify" },
-              { icon: SiTiktok, link: "https://tiktok.com/@neuron", color: "hover:bg-[#00f2fe] hover:shadow-[#00f2fe]/50", name: "TikTok" },
-              { icon: SiYoutube, link: "https://youtube.com/@neuron", color: "hover:bg-[#FF0000] hover:shadow-[#FF0000]/50", name: "YouTube" },
-              { icon: SiInstagram, link: "https://instagram.com/neuron", color: "hover:bg-[#E1306C] hover:shadow-[#E1306C]/50", name: "Instagram" },
-              { icon: SiApplemusic, link: "https://music.apple.com", color: "hover:bg-[#FA243C] hover:shadow-[#FA243C]/50", name: "Apple Music" }
-            ].map((social, i) => (
-              <motion.a
-                key={social.name}
-                href={social.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                variants={fadeUp}
-                className={`flex items-center justify-center w-16 h-16 rounded-full bg-white/5 border border-white/10 text-zinc-400 hover:text-white transition-all duration-300 hover:scale-110 hover:shadow-lg ${social.color}`}
-                data-testid={`link-${social.name.toLowerCase()}`}
-                title={social.name}
-              >
-                <social.icon className="w-7 h-7" />
-              </motion.a>
-            ))}
-          </div>
-        </motion.section>
+          Əlaqə və{" "}
+          <span className="text-green-400 [text-shadow:0_0_20px_rgba(74,222,128,0.6)]">
+            Əməkdaşlıq
+          </span>
+        </motion.h2>
 
-        {/* Contact Section */}
-        <motion.section 
-          ref={contactRef}
-          className="w-full max-w-xl mx-auto text-center"
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-100px" }}
-          variants={staggerContainer}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ delay: 0.1, duration: 0.6 }}
+          className="w-full space-y-3"
         >
-          <motion.div variants={fadeUp} className="mb-12">
-            <h2 className="text-3xl md:text-4xl font-display font-bold">
-              Əlaqə və <span className="text-primary filter drop-shadow-[0_0_15px_rgba(34,197,94,0.5)]">Əməkdaşlıq</span>
-            </h2>
-          </motion.div>
-          
-          <motion.div variants={fadeUp} className="flex flex-col gap-4">
-            <Button 
-              size="lg"
-              variant="outline"
-              className="w-full h-16 text-lg justify-start px-6 bg-white/5 border-white/10 hover:bg-white/10 hover:text-white transition-all duration-300 rounded-xl group"
-              onClick={() => window.open('mailto:sirxanovnurulla@gmail.com', '_blank')}
-              data-testid="button-email"
-            >
-              <Mail className="mr-4 h-5 w-5 text-primary group-hover:scale-110 transition-transform" />
-              sirxanovnurulla@gmail.com
-            </Button>
-            
-            <Button 
-              size="lg"
-              variant="outline"
-              className="w-full h-16 text-lg justify-start px-6 bg-white/5 border-white/10 hover:bg-white/10 hover:text-white transition-all duration-300 rounded-xl group"
-              onClick={shareProfile}
-              data-testid="button-share"
-            >
-              <Share2 className="mr-4 h-5 w-5 text-primary group-hover:scale-110 transition-transform" />
-              Profili Paylaş
-            </Button>
-          </motion.div>
-        </motion.section>
-        
-      </main>
+          <a
+            href="mailto:sirxanovnurulla@gmail.com"
+            data-testid="button-email"
+            className="flex w-full items-center gap-4 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-sm font-medium text-zinc-300 transition-all duration-200 hover:border-green-500/30 hover:bg-white/10 hover:text-white"
+          >
+            <Mail className="h-5 w-5 shrink-0 text-green-400" />
+            sirxanovnurulla@gmail.com
+          </a>
+
+          <button
+            onClick={handleShare}
+            data-testid="button-share"
+            className="flex w-full items-center gap-4 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-sm font-medium text-zinc-300 transition-all duration-200 hover:border-green-500/30 hover:bg-white/10 hover:text-white"
+          >
+            {copied ? (
+              <Check className="h-5 w-5 shrink-0 text-green-400" />
+            ) : (
+              <Share2 className="h-5 w-5 shrink-0 text-green-400" />
+            )}
+            {copied ? "Link kopyalandı!" : "Profili Paylaş"}
+          </button>
+        </motion.div>
+      </section>
     </div>
   );
 }
