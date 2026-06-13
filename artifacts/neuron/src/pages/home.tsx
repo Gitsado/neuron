@@ -2,89 +2,138 @@ import { useRef, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { Play, Mail, Share2, Check } from "lucide-react";
 import { SiSpotify, SiTiktok, SiYoutube, SiInstagram, SiApplemusic } from "react-icons/si";
-import logoImg from "@assets/image_1781383605153.png";
+import logoImg from "@assets/neuron_logo.jpg_1781384120294.jpeg";
+
+const GOLD = "#E8B84B";
+const GOLD_GLOW = "rgba(232,184,75,0.35)";
 
 const SOCIALS = [
-  { Icon: SiSpotify,    href: "https://open.spotify.com/artist/neuron", label: "Spotify",     glow: "#1DB954" },
-  { Icon: SiTiktok,     href: "https://tiktok.com/@neuron",             label: "TikTok",      glow: "#69C9D0" },
-  { Icon: SiYoutube,    href: "https://youtube.com/@neuron",            label: "YouTube",     glow: "#FF0000" },
-  { Icon: SiInstagram,  href: "https://instagram.com/neuron",           label: "Instagram",   glow: "#E1306C" },
-  { Icon: SiApplemusic, href: "https://music.apple.com",               label: "Apple Music", glow: "#FC3C44" },
+  {
+    Icon: SiSpotify,
+    href: "https://open.spotify.com/artist/36QWNUY9Ve6dwNq6z0xUVI?si=C0AfHquzQs6zk8bLmfRIMg",
+    label: "Spotify",
+    glow: "#1DB954",
+  },
+  {
+    Icon: SiTiktok,
+    href: "https://tiktok.com/@neuron.808?_r=1&_t=ZS-93TaFpfza69",
+    label: "TikTok",
+    glow: "#69C9D0",
+  },
+  {
+    Icon: SiYoutube,
+    href: "https://www.youtube.com/@neuron.808",
+    label: "YouTube",
+    glow: "#FF0000",
+  },
+  {
+    Icon: SiInstagram,
+    href: "https://www.instagram.com/neuron.808",
+    label: "Instagram",
+    glow: "#E1306C",
+  },
+  {
+    Icon: SiApplemusic,
+    href: "https://music.apple.com/az/artist/neuron/6775906366",
+    label: "Apple Music",
+    glow: "#FC3C44",
+  },
 ];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 22 },
+  show: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] },
+  }),
+};
 
 export default function Home() {
   const contactRef = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
-  const [mousePos, setMousePos] = useState({ x: 50, y: 50 });
+  const [mouse, setMouse] = useState({ x: 50, y: 40 });
 
   useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      setMousePos({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100,
-      });
-    };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
+    const move = (e: MouseEvent) =>
+      setMouse({ x: (e.clientX / window.innerWidth) * 100, y: (e.clientY / window.innerHeight) * 100 });
+    window.addEventListener("mousemove", move);
+    return () => window.removeEventListener("mousemove", move);
   }, []);
 
   const handleShare = async () => {
     await navigator.clipboard.writeText(window.location.href);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setTimeout(() => setCopied(false), 2200);
   };
 
   return (
-    <div className="relative min-h-screen bg-[#030a04] text-white overflow-x-hidden">
+    <div className="relative min-h-screen overflow-x-hidden" style={{ background: "#080808", color: "#f5f0e8" }}>
 
-      {/* — animated radial bg that follows cursor — */}
+      {/* ── cursor-following gold glow ── */}
       <div
-        className="pointer-events-none fixed inset-0 z-0 transition-all duration-700"
+        className="pointer-events-none fixed inset-0 z-0 transition-all duration-1000"
         style={{
-          background: `radial-gradient(ellipse 70% 60% at ${mousePos.x}% ${mousePos.y}%, rgba(34,197,94,0.07) 0%, transparent 70%)`,
+          background: `radial-gradient(ellipse 55% 45% at ${mouse.x}% ${mouse.y}%, rgba(232,184,75,0.06) 0%, transparent 70%)`,
         }}
       />
-      {/* static deep green center glow */}
-      <div className="pointer-events-none fixed inset-0 z-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_0%,rgba(34,197,94,0.12),transparent)]" />
+      {/* top radial */}
+      <div
+        className="pointer-events-none fixed inset-0 z-0"
+        style={{ background: "radial-gradient(ellipse 80% 40% at 50% -5%, rgba(232,184,75,0.09) 0%, transparent 60%)" }}
+      />
+      {/* subtle vignette */}
+      <div
+        className="pointer-events-none fixed inset-0 z-0"
+        style={{ background: "radial-gradient(ellipse 100% 100% at 50% 50%, transparent 50%, rgba(0,0,0,0.55) 100%)" }}
+      />
 
-      {/* ─── HERO ─── */}
-      <section className="relative z-10 flex flex-col items-center text-center px-6 pt-24 pb-16 max-w-3xl mx-auto">
+      {/* ─────────── HERO ─────────── */}
+      <section className="relative z-10 flex flex-col items-center text-center px-6 pt-20 pb-12 max-w-2xl mx-auto">
 
         {/* logo */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.85 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
+          custom={0} variants={fadeUp} initial="hidden" animate="show"
           className="relative mb-7"
         >
-          <div className="absolute inset-0 rounded-2xl bg-green-500/20 blur-2xl scale-110" />
+          <div
+            className="absolute -inset-3 rounded-3xl blur-2xl opacity-60"
+            style={{ background: `radial-gradient(circle, ${GOLD_GLOW}, transparent 70%)` }}
+          />
           <img
             src={logoImg}
-            alt="Neuron"
-            className="relative w-36 h-36 rounded-2xl object-cover border border-white/10 shadow-[0_0_40px_rgba(34,197,94,0.25)]"
+            alt="Neuron logo"
+            className="relative w-40 h-40 rounded-2xl object-cover"
+            style={{ boxShadow: `0 0 0 1px rgba(232,184,75,0.2), 0 8px 40px rgba(0,0,0,0.7)` }}
           />
         </motion.div>
 
         {/* badge */}
         <motion.span
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.5 }}
-          className="mb-5 inline-block rounded-full border border-green-500/30 bg-green-500/10 px-4 py-1 text-xs font-semibold tracking-widest text-green-400 uppercase"
+          custom={1} variants={fadeUp} initial="hidden" animate="show"
+          className="mb-6 inline-block rounded-full px-4 py-1 text-[11px] font-semibold tracking-[0.18em] uppercase"
+          style={{
+            background: "rgba(232,184,75,0.08)",
+            border: "1px solid rgba(232,184,75,0.28)",
+            color: GOLD,
+            letterSpacing: "0.18em",
+          }}
         >
           Rapper / Bəstəkar
         </motion.span>
 
         {/* name */}
         <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-7 font-display text-[clamp(4rem,15vw,9rem)] font-black leading-none tracking-tighter"
+          custom={2} variants={fadeUp} initial="hidden" animate="show"
+          className="font-display mb-6 leading-none"
           style={{
-            background: "linear-gradient(170deg, #ffffff 30%, rgba(255,255,255,0.4) 100%)",
+            fontSize: "clamp(3.5rem, 14vw, 8rem)",
+            fontWeight: 900,
+            background: `linear-gradient(160deg, #fff 0%, #f5e8c0 40%, ${GOLD} 70%, #b8862a 100%)`,
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
+            textShadow: "none",
+            letterSpacing: "-0.02em",
           }}
         >
           Neuron
@@ -92,44 +141,62 @@ export default function Home() {
 
         {/* bio */}
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.45, duration: 0.6 }}
-          className="mb-10 max-w-xl space-y-3 text-[15px] leading-relaxed text-zinc-400"
+          custom={3} variants={fadeUp} initial="hidden" animate="show"
+          className="mb-10 space-y-3 max-w-md"
+          style={{ color: "rgba(245,240,232,0.55)", fontSize: "15px", lineHeight: 1.7 }}
         >
           <p>Salam mən neuron. Bu camiyada yeniyem fərqimi ortaya qoyacam. Şans versəniz sevinərəm.</p>
           <p>Mənə aşağıdakı linklərə keçid edərək və sosial media hesablarımdan məni izləyərək dəstək ola bilərsiniz.</p>
         </motion.div>
 
-        {/* CTA buttons */}
+        {/* CTA */}
         <motion.div
-          initial={{ opacity: 0, y: 14 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.55, duration: 0.6 }}
+          custom={4} variants={fadeUp} initial="hidden" animate="show"
           className="flex flex-wrap justify-center gap-3"
         >
           <a
-            href="https://open.spotify.com/artist/neuron"
+            href="https://open.spotify.com/artist/36QWNUY9Ve6dwNq6z0xUVI?si=C0AfHquzQs6zk8bLmfRIMg"
             target="_blank"
             rel="noopener noreferrer"
             data-testid="button-listen"
-            className="inline-flex items-center gap-2 rounded-full bg-green-500 px-7 py-3.5 text-sm font-bold text-black transition-all duration-200 hover:bg-green-400 hover:shadow-[0_0_28px_rgba(34,197,94,0.55)] active:scale-95"
+            className="inline-flex items-center gap-2.5 rounded-full px-7 py-3.5 text-sm font-bold transition-all duration-200 active:scale-95"
+            style={{
+              background: `linear-gradient(135deg, ${GOLD} 0%, #c99626 100%)`,
+              color: "#080808",
+              boxShadow: `0 4px 24px ${GOLD_GLOW}`,
+            }}
+            onMouseEnter={e => (e.currentTarget.style.boxShadow = `0 6px 32px rgba(232,184,75,0.55)`)}
+            onMouseLeave={e => (e.currentTarget.style.boxShadow = `0 4px 24px ${GOLD_GLOW}`)}
           >
-            <Play className="h-4 w-4 fill-black" />
+            <Play className="h-4 w-4 fill-current" />
             Musiqi Dinlə
           </a>
+
           <button
             onClick={() => contactRef.current?.scrollIntoView({ behavior: "smooth" })}
             data-testid="button-contact"
-            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-7 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-200 hover:bg-white/10 hover:border-white/30 active:scale-95"
+            className="inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold transition-all duration-200 active:scale-95"
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.12)",
+              color: "rgba(245,240,232,0.85)",
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.background = "rgba(255,255,255,0.08)";
+              e.currentTarget.style.borderColor = "rgba(232,184,75,0.3)";
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.background = "rgba(255,255,255,0.04)";
+              e.currentTarget.style.borderColor = "rgba(255,255,255,0.12)";
+            }}
           >
             Əlaqə
           </button>
         </motion.div>
       </section>
 
-      {/* ─── SOCIAL ICONS ─── */}
-      <section className="relative z-10 flex justify-center gap-4 px-6 py-8">
+      {/* ─────────── SOCIAL ICONS ─────────── */}
+      <section className="relative z-10 flex justify-center gap-4 px-6 py-4">
         {SOCIALS.map(({ Icon, href, label, glow }, i) => (
           <motion.a
             key={label}
@@ -138,65 +205,118 @@ export default function Home() {
             rel="noopener noreferrer"
             data-testid={`link-${label.toLowerCase().replace(" ", "-")}`}
             title={label}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.65 + i * 0.08, duration: 0.5 }}
-            whileHover={{ scale: 1.15, boxShadow: `0 0 24px ${glow}99` }}
-            whileTap={{ scale: 0.95 }}
-            className="flex h-14 w-14 items-center justify-center rounded-full border border-white/10 bg-white/5 text-zinc-400 transition-colors duration-200"
-            style={{ "--glow": glow } as React.CSSProperties}
+            custom={5 + i}
+            variants={fadeUp}
+            initial="hidden"
+            animate="show"
+            whileHover={{ scale: 1.14 }}
+            whileTap={{ scale: 0.93 }}
+            className="flex h-[60px] w-[60px] items-center justify-center rounded-full transition-colors duration-300"
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.08)",
+              color: "rgba(245,240,232,0.5)",
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.boxShadow = `0 0 22px ${glow}66`;
+              (e.currentTarget as HTMLElement).style.borderColor = `${glow}55`;
+              (e.currentTarget as HTMLElement).style.color = "#fff";
+              (e.currentTarget as HTMLElement).style.background = `${glow}15`;
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.boxShadow = "none";
+              (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.08)";
+              (e.currentTarget as HTMLElement).style.color = "rgba(245,240,232,0.5)";
+              (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.04)";
+            }}
           >
-            <Icon className="h-6 w-6" />
+            <Icon size={22} />
           </motion.a>
         ))}
       </section>
 
-      {/* ─── DIVIDER ─── */}
-      <div className="mx-auto my-16 max-w-xs h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+      {/* ─────────── DIVIDER ─────────── */}
+      <div className="relative z-10 mx-auto my-16 max-w-xs">
+        <div
+          className="h-px w-full"
+          style={{ background: `linear-gradient(to right, transparent, ${GOLD_GLOW}, transparent)` }}
+        />
+      </div>
 
-      {/* ─── CONTACT ─── */}
+      {/* ─────────── CONTACT ─────────── */}
       <section
         ref={contactRef}
-        className="relative z-10 flex flex-col items-center px-6 pb-28 text-center max-w-md mx-auto"
+        className="relative z-10 flex flex-col items-center px-6 pb-28 text-center max-w-sm mx-auto"
       >
         <motion.h2
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 18 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="mb-8 font-display text-3xl font-bold md:text-4xl"
+          transition={{ duration: 0.65 }}
+          className="font-display mb-8 text-3xl font-bold md:text-4xl"
+          style={{ color: "#f5f0e8" }}
         >
           Əlaqə və{" "}
-          <span className="text-green-400 [text-shadow:0_0_20px_rgba(74,222,128,0.6)]">
+          <span style={{ color: GOLD, textShadow: `0 0 24px ${GOLD_GLOW}` }}>
             Əməkdaşlıq
           </span>
         </motion.h2>
 
         <motion.div
-          initial={{ opacity: 0, y: 16 }}
+          initial={{ opacity: 0, y: 14 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.1, duration: 0.6 }}
+          transition={{ delay: 0.1, duration: 0.65 }}
           className="w-full space-y-3"
         >
           <a
             href="mailto:sirxanovnurulla@gmail.com"
             data-testid="button-email"
-            className="flex w-full items-center gap-4 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-sm font-medium text-zinc-300 transition-all duration-200 hover:border-green-500/30 hover:bg-white/10 hover:text-white"
+            className="flex w-full items-center gap-4 rounded-2xl px-5 py-4 text-sm font-medium transition-all duration-200"
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.09)",
+              color: "rgba(245,240,232,0.7)",
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.borderColor = "rgba(232,184,75,0.3)";
+              (e.currentTarget as HTMLElement).style.color = "#f5f0e8";
+              (e.currentTarget as HTMLElement).style.background = "rgba(232,184,75,0.06)";
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.09)";
+              (e.currentTarget as HTMLElement).style.color = "rgba(245,240,232,0.7)";
+              (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.04)";
+            }}
           >
-            <Mail className="h-5 w-5 shrink-0 text-green-400" />
+            <Mail className="h-[18px] w-[18px] shrink-0" style={{ color: GOLD }} />
             sirxanovnurulla@gmail.com
           </a>
 
           <button
             onClick={handleShare}
             data-testid="button-share"
-            className="flex w-full items-center gap-4 rounded-2xl border border-white/10 bg-white/5 px-6 py-4 text-sm font-medium text-zinc-300 transition-all duration-200 hover:border-green-500/30 hover:bg-white/10 hover:text-white"
+            className="flex w-full items-center gap-4 rounded-2xl px-5 py-4 text-sm font-medium transition-all duration-200"
+            style={{
+              background: "rgba(255,255,255,0.04)",
+              border: "1px solid rgba(255,255,255,0.09)",
+              color: "rgba(245,240,232,0.7)",
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLElement).style.borderColor = "rgba(232,184,75,0.3)";
+              (e.currentTarget as HTMLElement).style.color = "#f5f0e8";
+              (e.currentTarget as HTMLElement).style.background = "rgba(232,184,75,0.06)";
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLElement).style.borderColor = "rgba(255,255,255,0.09)";
+              (e.currentTarget as HTMLElement).style.color = "rgba(245,240,232,0.7)";
+              (e.currentTarget as HTMLElement).style.background = "rgba(255,255,255,0.04)";
+            }}
           >
             {copied ? (
-              <Check className="h-5 w-5 shrink-0 text-green-400" />
+              <Check className="h-[18px] w-[18px] shrink-0" style={{ color: GOLD }} />
             ) : (
-              <Share2 className="h-5 w-5 shrink-0 text-green-400" />
+              <Share2 className="h-[18px] w-[18px] shrink-0" style={{ color: GOLD }} />
             )}
             {copied ? "Link kopyalandı!" : "Profili Paylaş"}
           </button>
