@@ -200,10 +200,9 @@ export default function Home() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.65 }}
-          style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: "clamp(1.6rem,5vw,2.2rem)", marginBottom: "1.75rem", color: "#f5f0e8" }}
+          style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700, fontSize: "clamp(1.4rem,4vw,2rem)", marginBottom: "1.75rem", color: "#f5f0e8", whiteSpace: "nowrap" }}
         >
-          Əlaqə və{" "}
-          <span style={{ color: GOLD, textShadow: `0 0 22px ${GOLD_GLOW}` }}>Əməkdaşlıq</span>
+          Əlaqə və <span style={{ color: GOLD, textShadow: `0 0 22px ${GOLD_GLOW}` }}>Əməkdaşlıq</span>
         </motion.h2>
 
         <motion.a
