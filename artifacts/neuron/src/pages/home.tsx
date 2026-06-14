@@ -15,10 +15,10 @@ const SOCIALS = [
     glow: "#1DB954",
   },
   {
-    Icon: SiTiktok,
-    href: "https://tiktok.com/@neuron.808?_r=1&_t=ZS-93TaFpfza69",
-    label: "TikTok",
-    glow: "#69C9D0",
+    Icon: SiApplemusic,
+    href: "https://music.apple.com/az/artist/neuron/6775906366",
+    label: "Apple Music",
+    glow: "#FC3C44",
   },
   {
     Icon: SiYoutube,
@@ -33,10 +33,10 @@ const SOCIALS = [
     glow: "#E1306C",
   },
   {
-    Icon: SiApplemusic,
-    href: "https://music.apple.com/az/artist/neuron/6775906366",
-    label: "Apple Music",
-    glow: "#FC3C44",
+    Icon: SiTiktok,
+    href: "https://tiktok.com/@neuron.808?_r=1&_t=ZS-93TaFpfza69",
+    label: "TikTok",
+    glow: "#69C9D0",
   },
 ];
 
@@ -111,7 +111,7 @@ export default function Home() {
             color: GOLD,
           }}
         >
-          Rapper / Bəstəkar
+          Musician
         </motion.span>
 
         {/* name — lowercase, Syne, gold gradient */}
@@ -139,7 +139,7 @@ export default function Home() {
           style={{ color: "rgba(245,240,232,0.48)", fontSize: "15px", lineHeight: 1.75, fontFamily: "'Inter', sans-serif" }}
         >
           <p>Salam mən neuron. Bu camiyada yeniyem fərqimi ortaya qoyacam. Şans versəniz sevinərəm.</p>
-          <p>Mənə aşağıdakı linklərə keçid edərək və sosial media hesablarımdan məni izləyərək dəstək ola bilərsiniz.</p>
+          <p>Mənə aşağıdakı linklərdən keçid edərək izləyə və əlaqə saxlaya bilərsiniz.</p>
         </motion.div>
       </section>
 
