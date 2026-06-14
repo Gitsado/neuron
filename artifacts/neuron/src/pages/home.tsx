@@ -138,7 +138,6 @@ export default function Home() {
           className="mb-10 space-y-3 max-w-md"
           style={{ color: "rgba(245,240,232,0.48)", fontSize: "15px", lineHeight: 1.75, fontFamily: "'Inter', sans-serif" }}
         >
-          <p>Salam mən neuron. Bu camiyada yeniyem fərqimi ortaya qoyacam. Şans versəniz sevinərəm.</p>
           <p>Mənə aşağıdakı linklərdən keçid edərək izləyə və əlaqə saxlaya bilərsiniz.</p>
         </motion.div>
       </section>
@@ -236,6 +235,16 @@ export default function Home() {
           sirxanovnurulla@gmail.com
         </motion.a>
       </section>
+
+      {/* ─── FOOTER ─── */}
+      <footer className="relative z-10 pb-10 text-center">
+        <div className="mx-auto mb-6 max-w-xs">
+          <div className="h-px w-full" style={{ background: `linear-gradient(to right, transparent, rgba(232,184,75,0.15), transparent)` }} />
+        </div>
+        <p style={{ fontFamily: "'Syne', sans-serif", fontSize: "12px", letterSpacing: "0.12em", color: "rgba(245,240,232,0.2)" }}>
+          © 2026 <span style={{ color: "rgba(232,184,75,0.4)" }}>neuron</span> — Bütün hüquqlar qorunur.
+        </p>
+      </footer>
     </div>
   );
 }
